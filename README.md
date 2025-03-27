@@ -84,6 +84,10 @@ Plano Gratuito (Spark):
 
 ---
 
+## Diagramas UML
+
+- [Diagrama de Componentes](https://imgur.com/a/sF6a9Ha)
+
 
 <!-- ## 5️⃣ Documentação de Tabelas e Colunas
 - Os tipos de dados foram definidos para garantir consistência e eficiência.
