@@ -86,7 +86,7 @@ Plano Gratuito (Spark):
 
 ## Diagramas UML
 
-[Diagrama de Componentes](https://imgur.com/a/sF6a9Ha)
+[![Diagrama de Componentes](https://imgur.com/a/sF6a9Ha)]
 
 
 <!-- ## 5️⃣ Documentação de Tabelas e Colunas
