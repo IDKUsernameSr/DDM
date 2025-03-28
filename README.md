@@ -130,7 +130,7 @@ As entidades principais são o Jogador, que possui um ID, pontuação e lista de
 
 O fluxo principal começa com o carregamento do progresso salvo, seguido pelo ciclo de clicar, ganhar pontos, comprar upgrades, gerar pontos automaticamente e salvar os dados periodicamente. Caso o jogador tente comprar sem pontos suficientes, o sistema exibe uma mensagem de erro.
 
-Esse estudo de caso serve como base para a criação de diagramas UML, como casos de uso, classes, sequência e atividades.
+<!-- Esse estudo de caso serve como base para a criação de diagramas UML, como casos de uso, classes, sequência e atividades. -->
 
 ## 👨‍💻 Desenvolvedores
 
