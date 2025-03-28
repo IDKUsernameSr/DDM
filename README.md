@@ -2,17 +2,19 @@
 
 Este projeto é um jogo idle baseado no famoso **Cookie Clicker**, onde os jogadores clicam em um objeto principal para acumular pontos e podem comprar melhorias para automatizar a geração de pontos.
 
----
+## 👨‍🏫 Professor Responsável 
 
-# Professor Responsável 
-Carlos Eduardo Duque Polito
-
----
++ Carlos Eduardo Duque Polito
 
 ## 📌 Objetivo do Jogo
 O jogador precisa clicar repetidamente no bolo para ganhar dinheiro. Conforme acumula dinheiro, pode comprar upgrades que aumentam a produção automaticamente.
 
----
+## 👥 Público-alvo
+Cake Clicker é para todos que adoram jogos idle e de cliques, desde quem joga casualmente para se divertir até os que adoram levar o jogo a sério e desbloquear melhorias sem parar. 
+
+## ✖️ O que não teremos no projeto
++ Comércio ou qualquer tipo de item virtual.
++ Implementação de microtransações ou compras com dinheiro real.
 
 ## 🎮 Mecânicas do Jogo
 - **Clique Principal:** O jogador pode clicar para ganhar pontos manualmente.
@@ -21,7 +23,11 @@ O jogador precisa clicar repetidamente no bolo para ganhar dinheiro. Conforme ac
 <!-- - **Loja de Melhorias:** Permite comprar upgrades para aumentar a produção. -->
 - **Progresso Salvo:** O jogo salva automaticamente o progresso do jogador.
 
----
+
+## 📋Matriz de Requisitos
+
+![Matriz de Requisitos](https://i.imgur.com/PtClEIt.png)
+
 
 ## 🗃️ Dicionário de Dados
 
@@ -47,16 +53,29 @@ Essa entidade armazena o progresso do jogador.
 - **`id_jogador`**: INT - Relacionamento com a entidade `Jogador`.
 - **`data_ultimo_login`**: DATE - Data do último login do jogador. -->
 
----
-
 ## 🚀 Tecnologias Utilizadas
 - **Linguagem:** Dart
 - **Engine:** Flutter
 - **Banco de Dados:** Hive
 
----
 
-## Plano de Capacidade
+## Diagramas UML
+
+- Diagrama de Caso de Uso
+![Diagrama de Caso de Uso](https://i.imgur.com/5qmpe3Y.jpeg)
+
+- Fluxograma
+
+![Fluxograma](https://i.imgur.com/dUHqss0.jpeg)
+
+- Diagrama de Componentes
+![Diagrama de Componentes](https://i.imgur.com/NbTVrmY.png)
+
+- Diagramas de Sequência
+![Diagrama de Componentes](https://i.imgur.com/RMVZrtJ.png)
+
+
+## 📔 Plano de Capacidade
 ### Armazenamento de Dados (Firestore ou Realtime Database)
   Dados a serem armazenados por usuário:
 - id_jogador
@@ -82,12 +101,40 @@ Plano Gratuito (Spark):
 - Largura de banda: 10 GB/mês.
 - Custo total estimado: R$ 0.
 
----
+## 🛡️ Estratégia de Backup e Recuperação
 
-## Diagramas UML
+O jogo Cake Clicker salva os dados do jogador localmente usando o banco de dados Hive. Isso garante que o progresso não seja perdido mesmo que o jogador feche o app.
 
-- Diagrama de Componentes
-![Diagrama de Componentes](https://i.imgur.com/NbTVrmY.png)
+### Backup
+
+- Os dados são salvos automaticamente a cada 5 segundos e também quando o jogador fecha o aplicativo.
+- As informações salvas incluem a pontuação e os upgrades comprados.
+- O arquivo de backup fica no próprio celular ou computador do jogador.
+
+### Recuperação
+- Quando o jogador abre o jogo, o sistema carrega os dados salvos automaticamente.
+- Se os dados não forem encontrados ou estiverem corrompidos, o jogo começa do zero com os valores iniciais.
+
+### Responsável
+- O próprio sistema do jogo faz todo o processo de salvar e recuperar os dados.
+- O desenvolvedor é responsável por programar essas funções corretamente.
+
+
+## 📘 Estudo de caso
+
+O Cake Clicker é um jogo idle/clicker em que o jogador clica em um bolo para acumular pontos e pode usar esses pontos para comprar upgrades que aumentam a geração automática de pontos. O jogo funciona offline e salva o progresso localmente com o banco de dados Hive.
+
+O principal ator do sistema é o jogador, responsável por interagir com a interface do jogo, realizar cliques e adquirir upgrades. As funcionalidades do sistema incluem clique manual para gerar pontos, compra de upgrades, geração automática baseada nos upgrades adquiridos, além do salvamento e carregamento automático do progresso.
+
+As entidades principais são o Jogador, que possui um ID, pontuação e lista de upgrades, e os Upgrades, que têm nome, custo, produção por segundo e quantidade comprada. O custo dos upgrades aumenta progressivamente, e a geração passiva é determinada pela soma da produção de todos os upgrades ativos.
+
+O fluxo principal começa com o carregamento do progresso salvo, seguido pelo ciclo de clicar, ganhar pontos, comprar upgrades, gerar pontos automaticamente e salvar os dados periodicamente. Caso o jogador tente comprar sem pontos suficientes, o sistema exibe uma mensagem de erro.
+
+Esse estudo de caso serve como base para a criação de diagramas UML, como casos de uso, classes, sequência e atividades.
+
+## 👨‍💻 Desenvolvedores
+
+### Eric Daiske Nogata, Carla Abreu, Luiz Henrique Pereira
 
 
 <!-- ## 5️⃣ Documentação de Tabelas e Colunas
