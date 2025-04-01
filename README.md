@@ -76,7 +76,7 @@ Essa entidade armazena o progresso do jogador.
 
 
 ## 📔 Plano de Capacidade
-### Armazenamento de Dados (Firestore ou Realtime Database)
+### Armazenamento de Dados
   Dados a serem armazenados por usuário:
 - id_jogador
 - Cookies acumulados
@@ -92,7 +92,7 @@ Carga estimada:
 - Operações por segundo: < 1.
 
 ### Autenticação (Firebase Auth)
-- Até 10.000 autenticações/mês no plano gratuito (suficiente para um projeto escolar).
+- Até 10.000 autenticações/mês no plano gratuito.
 
 ### Custos
 Plano Gratuito (Spark):
