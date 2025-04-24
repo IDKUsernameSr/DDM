@@ -1,4 +1,4 @@
-# 🎂 Jogo Cake Clicker - Projeto
+# 🎂 Jogo BoloMania - Projeto
 
 Este projeto é um jogo idle baseado no famoso **Cookie Clicker**, onde os jogadores clicam em um objeto principal para acumular pontos e podem comprar melhorias para automatizar a geração de pontos.
 
@@ -10,7 +10,7 @@ Este projeto é um jogo idle baseado no famoso **Cookie Clicker**, onde os jogad
 O jogador precisa clicar repetidamente no bolo para ganhar dinheiro. Conforme acumula dinheiro, pode comprar upgrades que aumentam a produção automaticamente.
 
 ## 👥 Público-alvo
-Cake Clicker é para todos que adoram jogos idle e de cliques, desde quem joga casualmente para se divertir até os que adoram levar o jogo a sério e desbloquear melhorias sem parar. 
+BoloMania é para todos que adoram jogos idle e de cliques, desde quem joga casualmente para se divertir até os que adoram levar o jogo a sério e desbloquear melhorias sem parar. 
 
 ## ✖️ O que não teremos no projeto
 + Comércio ou qualquer tipo de item virtual.
@@ -103,7 +103,7 @@ Plano Gratuito (Spark):
 
 ## 🛡️ Estratégia de Backup e Recuperação
 
-O jogo Cake Clicker salva os dados do jogador localmente usando o banco de dados Hive. Isso garante que o progresso não seja perdido mesmo que o jogador feche o app.
+O jogo BoloMania salva os dados do jogador localmente usando o banco de dados Hive. Isso garante que o progresso não seja perdido mesmo que o jogador feche o app.
 
 ### Backup
 
@@ -122,7 +122,7 @@ O jogo Cake Clicker salva os dados do jogador localmente usando o banco de dados
 
 ## 📘 Estudo de caso
 
-O Cake Clicker é um jogo idle/clicker em que o jogador clica em um bolo para acumular pontos e pode usar esses pontos para comprar upgrades que aumentam a geração automática de pontos. O jogo funciona offline e salva o progresso localmente com o banco de dados Hive.
+O BoloMania é um jogo idle/clicker em que o jogador clica em um bolo para acumular pontos e pode usar esses pontos para comprar upgrades que aumentam a geração automática de pontos. O jogo funciona offline e salva o progresso localmente com o banco de dados Hive.
 
 O principal ator do sistema é o jogador, responsável por interagir com a interface do jogo, realizar cliques e adquirir upgrades. As funcionalidades do sistema incluem clique manual para gerar pontos, compra de upgrades, geração automática baseada nos upgrades adquiridos, além do salvamento e carregamento automático do progresso.
 
