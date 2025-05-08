@@ -85,6 +85,10 @@ void updateCookiesPerSecond() {
     }
   }
 
+  if (selectedSkin.purchased) {
+    totalBoost += selectedSkin.cpsBoost;
+  }
+
   cookiesPerSecond = baseCookiesPerSecond * (1 + totalBoost);
 }
 
@@ -115,23 +119,15 @@ void buySpecialUpgrade(SpecialUpgrade upgrade) {
   }
 }
 
-void updateSkinBoost() {
-  updateCookiesPerSecond(); // recompute base CPS with specialUpgrades
-
-  if (selectedSkin.purchased && selectedSkin.cpsBoost > 0) {
-    cookiesPerSecond *= (1 + selectedSkin.cpsBoost);
-  }
-}
-
 List<CookieSkin> cookieSkins = [
   CookieSkin(
     name: "Classic Cookie",
-    imagePath: "assets/images.jpg",
+    imagePath: "assets/images.jpg", 
     cost: 0,
   ),
   CookieSkin(
     name: "Chocolate Cookie",
-    imagePath: "assets/boloMinion.jpg",
+    imagePath: "assets/bolo.jpg",
     cost: 100,
     cpsBoost: 0.2, // +20% CPS
   ),
@@ -145,7 +141,7 @@ void buyOrSelectSkin(CookieSkin skin) {
     }
     if (skin.purchased) {
       selectedSkin = skin;
-      updateSkinBoost(); // update CPS with skin
+      updateCookiesPerSecond(); // ✅ correct, only applies all boosts once
     }
   });
 }
