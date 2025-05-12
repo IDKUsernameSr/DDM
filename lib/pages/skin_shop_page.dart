@@ -1,4 +1,4 @@
-import 'package:cookie_clicker/game/cake_skin.dart';
+import 'package:bolo_mania/game/cake_skin.dart';
 import 'package:flutter/material.dart';
 
 class SkinShopPage extends StatelessWidget {

@@ -1,5 +1,5 @@
-import 'package:cookie_clicker/game/cake_skin.dart';
-import 'package:cookie_clicker/game/upgrades.dart';
+import 'package:bolo_mania/game/cake_skin.dart';
+import 'package:bolo_mania/game/upgrades.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 void saveGame({

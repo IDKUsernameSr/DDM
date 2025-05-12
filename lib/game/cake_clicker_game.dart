@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:cookie_clicker/game/game_data.dart';
+import 'package:bolo_mania/game/game_data.dart';
 import 'package:flutter/material.dart';
 import '../game/upgrades.dart';
 import '../game/cake_skin.dart';
