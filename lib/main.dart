@@ -7,7 +7,7 @@ void main() async {
   await Hive.initFlutter(); // Hive ready for mobile/web/desktop
   await Hive.openBox('gameData'); // Open your save box
 
-  runApp(const MyApp());
+  runApp(const MyApp()); 
 }
 
 class MyApp extends StatelessWidget {

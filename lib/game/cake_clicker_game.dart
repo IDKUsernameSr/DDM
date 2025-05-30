@@ -24,33 +24,10 @@ class CakeClickerGameState extends State<CakeClickerGame> {
   double baseCakesPerSecond = 0.0;
   late CakeSkin selectedSkin;
 
-  List<Upgrade> upgrades = [
-    Upgrade(name: "Cursor", cost: 15, cps: 0.1, iconPath: "assets/icons/cursor.png"),
-    Upgrade(name: "Grandma", cost: 100, cps: 1, iconPath: "assets/icons/cursor.png"),
-    Upgrade(name: "Farm", cost: 1100, cps: 8, iconPath: "assets/icons/cursor.png"),
-    Upgrade(name: "Mine", cost: 12000, cps: 47, iconPath: "assets/icons/cursor.png"),
-  ];
+  List<Upgrade> upgrades = List.from(defaultUpgrades);
+  List<SpecialUpgrade> specialUpgrades = List.from(defaultSpecialUpgrades);
 
-  List<SpecialUpgrade> specialUpgrades = [
-    SpecialUpgrade(name: "Golden Cookie", cost: 1, percentBoost: 0.2, iconPath: "assets/icons/cursor.png"),
-    SpecialUpgrade(name: "Golden Finger", cost: 15, clickBoost: 0.5, iconPath: "assets/icons/cursor.png"), // +50% click
-    SpecialUpgrade(name: "Super Oven", cost: 5000, percentBoost: 0.5, iconPath: "assets/icons/cursor.png"),
-  ];
-
- List<CakeSkin> cakeSkins = [
-  CakeSkin(
-    name: "Classic Cookie",
-    imagePath: "assets/images.jpg", 
-    cost: 0,
-    purchased: true,
-  ),
-  CakeSkin(
-    name: "Chocolate Cookie",
-    imagePath: "assets/bolo.jpg",
-    cost: 100,
-    cpsBoost: 0.2, // +20% CPS
-  ),
-];
+  List<CakeSkin> cakeSkins = List.from(defaultCakeSkins);
 
   void gameLoop() async {
     while (true) {
@@ -131,7 +108,7 @@ void buyOrSelectSkin(CakeSkin skin) {
 
 void startAutoSave() async {
   while (true) {
-    await Future.delayed(Duration(seconds: 10)); // change interval here
+    await Future.delayed(Duration(seconds: 1)); // change interval here
     saveGame(
       cakes: cakes,
       cakesPerClick: cakesPerClick,
@@ -152,15 +129,23 @@ void startAutoSave() async {
     cakes = data['cakes'];
     cakesPerClick = data['cakesPerClick'];
 
+    for (var saved in data['skins']) {
+      final matches = cakeSkins.where((s) => s.name == saved['name']);
+      if (matches.isNotEmpty) {
+        matches.first.purchased = saved['purchased'];
+      }
+    }
+
     selectedSkin = cakeSkins.firstWhere(
       (s) => s.name == data['selectedSkin'],
       orElse: () => cakeSkins[0],
     );
+    
 
     for (var saved in data['upgrades']) {
       final match = upgrades.firstWhere(
         (u) => u.name == saved['name'],
-        orElse: () => Upgrade(name: '', cost: 0, cps: 0, iconPath: ''),
+        orElse: () => Upgrade(name: '', baseCost: 0, cost: 0, cps: 0, iconPath: ''),
       );
 
       if (match.name.isNotEmpty) {
@@ -181,16 +166,8 @@ void startAutoSave() async {
       }
     }
 
-    for (var saved in data['skins']) {
-      final matches = cakeSkins.where((s) => s.name == saved['name']);
-      if (matches.isNotEmpty) {
-        matches.first.purchased = saved['purchased'];
-      }
-    }
-
     updateCakesPerSecond();
   }});
-    selectedSkin = cakeSkins[0];
     gameLoop();
     startAutoSave();
   }
@@ -198,17 +175,19 @@ void startAutoSave() async {
   @override
   Widget build(BuildContext context) {
     final infoStyle = TextStyle(
-      fontSize: 10,
+      fontSize: min(MediaQuery.of(context).size.width * 0.025, 10),
       fontFamily: 'PressStart2P',
       color: Colors.black,
     );
+    final screenWidth = MediaQuery.of(context).size.width;
+    final scale = min(screenWidth / 360, 1.5); // prevents huge scaling on tablets
     return Scaffold(
       appBar: AppBar(
         title: Text(
       'Cookie Clicker',
       style: TextStyle(
         fontFamily: 'PressStart2P', // 👾 or your pixel font
-        fontSize: 14,
+        fontSize: min(MediaQuery.of(context).size.width * 0.035, 14),
         color: Colors.black,
       ),
     ),
@@ -233,8 +212,10 @@ void startAutoSave() async {
               children: [
     Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      child: Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        alignment: WrapAlignment.center,
         children: [
           ElevatedButton(
             onPressed: () {
@@ -254,7 +235,7 @@ void startAutoSave() async {
               foregroundColor: Colors.black,
               elevation: 0,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(20 * scale),
                 side: BorderSide(color: Colors.black, width: 1.5),
               ),
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -262,7 +243,7 @@ void startAutoSave() async {
             child: Text(
               'Special Upgrades',
               style: TextStyle(
-                fontSize: 10,
+                fontSize: min(MediaQuery.of(context).size.width * 0.025, 10),
                 fontFamily: 'PressStart2P',
               ),
             ),
@@ -286,7 +267,7 @@ void startAutoSave() async {
               foregroundColor: Colors.black,
               elevation: 0,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(20 * scale),
                 side: BorderSide(color: Colors.black, width: 1.5),
               ),
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -294,7 +275,7 @@ void startAutoSave() async {
             child: Text(
               'Skin Shop',
               style: TextStyle(
-                fontSize: 10,
+                fontSize: min(MediaQuery.of(context).size.width * 0.025, 10),
                 fontFamily: 'PressStart2P',
               ),
             ),
@@ -317,6 +298,8 @@ void startAutoSave() async {
                       );
                     },
                     onReset: () {
+                      resetGame();
+                      
                       setState(() {
                         cakes = 0;
                         cakesPerClick = 1;
@@ -349,7 +332,7 @@ void startAutoSave() async {
               foregroundColor: Colors.black,
               elevation: 0,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(15 * scale),
                 side: BorderSide(color: Colors.black, width: 1.5),
               ),
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -357,7 +340,7 @@ void startAutoSave() async {
             child: Text(
               'Settings',
               style: TextStyle(
-                fontSize: 10,
+                fontSize: min(MediaQuery.of(context).size.width * 0.03, 10),
                 fontFamily: 'PressStart2P',
               ),
             ),
@@ -375,12 +358,12 @@ void startAutoSave() async {
                     decoration: BoxDecoration(
                       color: Color(0xFFF8D9D6), // light pink/beige background
                       border: Border.all(color: Colors.black, width: 1.5),
-                      borderRadius: BorderRadius.circular(20),  
+                      borderRadius: BorderRadius.circular(20 * scale),  
                     ),
                     child: Text(
-                      '${cakes.toStringAsFixed(1)} cakes',
+                      '${cakes.toInt()} cakes',
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: min(MediaQuery.of(context).size.width * 0.035, 14),
                         fontWeight: FontWeight.bold,
                         fontFamily: 'PressStart2P', // or remove this line if you’re not using a pixel font yet
                         color: Colors.black,
@@ -406,12 +389,12 @@ void startAutoSave() async {
                     decoration: BoxDecoration(
                       color: Color(0xFFF8D9D6),
                       border: Border.all(color: Colors.black, width: 1.5),
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(20 * scale),
                     ),
                     child: Text(
                       'Per second: ${cakesPerSecond.toStringAsFixed(1)}',
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: min(MediaQuery.of(context).size.width * 0.035, 14),
                         fontWeight: FontWeight.bold,
                         fontFamily: 'PressStart2P', // or any pixel font you're using
                         color: Colors.black,
@@ -457,12 +440,12 @@ void startAutoSave() async {
                         decoration: BoxDecoration(
                           color: Color(0xFFF8D9D6),
                           border: Border.all(color: Colors.black, width: 1.5),
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(12 * scale),
                         ),
                         child: Text(
                           upgrade.name,
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: min(MediaQuery.of(context).size.width * 0.03, 12),
                             fontWeight: FontWeight.bold,
                             fontFamily: 'PressStart2P',
                             color: Colors.black,
@@ -479,7 +462,7 @@ void startAutoSave() async {
                           decoration: BoxDecoration(
                             color: Color(0xFFF8D9D6),
                             border: Border.all(color: Colors.black, width: 1.5),
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(10 * scale),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -501,7 +484,7 @@ void startAutoSave() async {
                           foregroundColor: Colors.black,
                           shape: RoundedRectangleBorder(
                             side: BorderSide(color: Colors.black, width: 1.5),
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(10 * scale),
                           ),
                           padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                         ),
@@ -509,7 +492,7 @@ void startAutoSave() async {
                         child: Text(
                           'COMPRAR',
                           style: TextStyle(
-                            fontSize: 10,
+                            fontSize: min(MediaQuery.of(context).size.width * 0.025, 10),
                             fontFamily: 'PressStart2P',
                           ),
                         ),

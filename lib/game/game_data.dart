@@ -45,3 +45,7 @@ Map<String, dynamic> loadGame() {
     'skins': box.get('skins', defaultValue: []),
   };
 }
+
+void resetGame() {
+  Hive.box('gameData').clear();
+}
