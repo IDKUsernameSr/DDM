@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:bolo_mania/game/game_data.dart';
+import 'package:bolo_mania/widgets/animated_cake.dart';
+import 'package:bolo_mania/widgets/floating_number.dart';
 import 'package:flutter/material.dart';
 import '../game/upgrades.dart';
 import '../game/cake_skin.dart';
@@ -28,6 +30,8 @@ class CakeClickerGameState extends State<CakeClickerGame> {
   List<SpecialUpgrade> specialUpgrades = List.from(defaultSpecialUpgrades);
 
   List<CakeSkin> cakeSkins = List.from(defaultCakeSkins);
+  
+  List<Widget> floatingNumbers = [];
 
   void gameLoop() async {
     while (true) {
@@ -120,6 +124,26 @@ void startAutoSave() async {
       );
   }
 }
+
+void showFloatingNumber(Offset position) {
+    final id = UniqueKey();
+
+    final widget = FloatingNumber(
+      key: id,
+      value: cakesPerClick,
+      top: position.dy - 60,
+      left: position.dx,
+      onFinished: () {
+        setState(() {
+          floatingNumbers.removeWhere((element) => element.key == id);
+        });
+      },
+    );
+
+    setState(() {
+      floatingNumbers.add(widget);
+    });
+  }
 
   @override
   void initState() {
@@ -371,18 +395,17 @@ void startAutoSave() async {
                     ),
                   ),
                   SizedBox(height: 20),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        cakes += cakesPerClick;
-                      });
-                    },
-                    child: Image.asset(
-                      selectedSkin.imagePath,
+                  AnimatedCake(
+                      imagePath: selectedSkin.imagePath,
                       width: 200,
                       height: 200,
+                      onPressed: (details) {
+                        setState(() {
+                          cakes += cakesPerClick;
+                        });
+                         showFloatingNumber(details.globalPosition);
+                      },
                     ),
-                  ),
                   SizedBox(height: 20),
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -409,11 +432,11 @@ void startAutoSave() async {
           Container(
             height: 200,
             decoration: BoxDecoration(
-              color: Colors.grey[200], // ✅ moved inside here
+              color: Colors.grey[200],
               image: DecorationImage(
                 image: AssetImage('assets/background2.jpg'),
-                  repeat: ImageRepeat.repeat,
-                  alignment: Alignment.topLeft,
+                repeat: ImageRepeat.repeat,
+                alignment: Alignment.topLeft,
               ),
             ),
             child: ListView.builder(
@@ -422,89 +445,74 @@ void startAutoSave() async {
                 final upgrade = upgrades[index];
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 6),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // 👵 Icon
-                      Image.asset(
-                        upgrade.iconPath,
-                        width: 40,
-                        height: 40,
-                      ),
-
-                      SizedBox(width: 8),
-
-                      // 🧁 Name label
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: FractionallySizedBox(
+                      widthFactor: 0.98, // 👈 controls width (e.g. 0.92 = 92% of screen)
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                         decoration: BoxDecoration(
                           color: Color(0xFFF8D9D6),
                           border: Border.all(color: Colors.black, width: 1.5),
-                          borderRadius: BorderRadius.circular(12 * scale),
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                        child: Text(
-                          upgrade.name,
-                          style: TextStyle(
-                            fontSize: min(MediaQuery.of(context).size.width * 0.03, 12),
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'PressStart2P',
-                            color: Colors.black,
-                          ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Row(
+                              children: [
+                                Image.asset(upgrade.iconPath, width: 32, height: 32),
+                                SizedBox(width: 8),
+                                Text(
+                                  upgrade.name,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontFamily: 'PressStart2P',
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            ElevatedButton(
+                              onPressed: () => buyUpgrade(upgrade),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Color(0xFFF8D9D6),
+                                foregroundColor: Colors.black,
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  side: BorderSide(color: Colors.black, width: 1.5),
+                                ),
+                                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                              ),
+                              child: Text(
+                                'COMPRAR',
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  fontFamily: 'PressStart2P',
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-
-                      SizedBox(width: 8),
-
-                      // 📄 Info box
-                      Expanded(
-                        child: Container(
-                          padding: EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Color(0xFFF8D9D6),
-                            border: Border.all(color: Colors.black, width: 1.5),
-                            borderRadius: BorderRadius.circular(10 * scale),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Custo: ${upgrade.cost} bolos', style: infoStyle),
-                              Text('Produção: ${upgrade.cps} bps → Total: ${(upgrade.count * upgrade.cps).toStringAsFixed(1)} bps', style: infoStyle),
-                              Text('Quantidade: ${upgrade.count}', style: infoStyle),
-                            ],
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(width: 8),
-
-                      // 🛒 Buy Button
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFFF8D9D6),
-                          foregroundColor: Colors.black,
-                          shape: RoundedRectangleBorder(
-                            side: BorderSide(color: Colors.black, width: 1.5),
-                            borderRadius: BorderRadius.circular(10 * scale),
-                          ),
-                          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                        ),
-                        onPressed: () => buyUpgrade(upgrade),
-                        child: Text(
-                          'COMPRAR',
-                          style: TextStyle(
-                            fontSize: min(MediaQuery.of(context).size.width * 0.025, 10),
-                            fontFamily: 'PressStart2P',
-                          ),
-                        ),
-                      ),
-                    ],
+                        SizedBox(height: 6),
+                        Text('Custo: ${upgrade.cost} bolos', style: infoStyle),
+                        Text('Produção: ${upgrade.cps} bps → Total: ${(upgrade.count * upgrade.cps).toStringAsFixed(1)} bps', style: infoStyle),
+                        Text('Quantidade: ${upgrade.count}', style: infoStyle),
+                      ],
+                    ),
                   ),
-                );
+                )));
               },
             ),
           ),
         ],
       ),
+      ...floatingNumbers,
             ],
     )));
   }

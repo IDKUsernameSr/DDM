@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bolo_mania/game/cake_skin.dart';
 import 'package:flutter/material.dart';
 
@@ -18,8 +20,21 @@ class SkinShopPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    
     return Scaffold(
-      appBar: AppBar(title: Text('Cookie Skins')),
+      appBar: AppBar(
+        title: Text(
+          'Cookie Skins',
+          style: TextStyle(
+            fontFamily: 'PressStart2P',
+            fontSize: min(screenWidth * 0.035, 14),
+            color: Colors.black,
+          ),
+      ),
+      backgroundColor: const Color(0xFFF8D9D6),
+      iconTheme: const IconThemeData(color: Colors.black),
+      ),
       body: ListView.builder(
         itemCount: skins.length,
         itemBuilder: (context, index) {

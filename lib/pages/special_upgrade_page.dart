@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import '../game/upgrades.dart';
 
@@ -15,8 +17,21 @@ class SpecialUpgradePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    
     return Scaffold(
-      appBar: AppBar(title: Text('Special Upgrades')),
+      appBar: AppBar(
+        title: Text(
+          'Special Upgrades',
+          style: TextStyle(
+            fontFamily: 'PressStart2P',
+            fontSize: min(screenWidth * 0.035, 14),
+            color: Colors.black,
+          ),
+          ),
+          backgroundColor: const Color(0xFFF8D9D6),
+          iconTheme: const IconThemeData(color: Colors.black),
+          ),
       body: ListView.builder(
         itemCount: upgrades.length,
         itemBuilder: (context, index) {
